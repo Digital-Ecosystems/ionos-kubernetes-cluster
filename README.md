@@ -9,6 +9,7 @@ Before you start deploying the Federated Catalogue, make sure you meet the requi
 - IONOS DCD Account
 - Terraform
 - Bash
+- Helm
 
 ## Configuration
 
