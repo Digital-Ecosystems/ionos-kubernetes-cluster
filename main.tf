@@ -125,7 +125,7 @@ resource "helm_release" "nginx-ingres" {
   repository = "https://helm.nginx.com/stable"
   chart      = "nginx-ingress"
   namespace = "nginx-ingress"
-  version    = "0.16.2"
+  version    = "0.17.1"
 
   create_namespace = true
 
