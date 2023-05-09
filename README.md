@@ -62,10 +62,9 @@ To install the DNS service you must first create secret containing service accou
 
 
 ```bash
-kubectl create namespace external-dns
 # Configure provider and credentials in ./external-dns/values.yaml
 vim ./external-dns/values.yaml
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
-helm install -n external-dns external-dns bitnami/external-dns -f helm/external-dns/values.yaml --version 6.14.1
+helm install -n external-dns external-dns bitnami/external-dns -f helm/external-dns/values.yaml --version 6.14.1 --create-namespace
 ```
