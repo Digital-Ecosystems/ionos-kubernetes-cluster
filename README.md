@@ -35,7 +35,23 @@ To create the necessary infrastructure run the script ```./create-ionos-kubernet
 ./create-ionos-kubernetes.sh
 ```
 
-### 2. cert-manager (optional)
+### 2. nginx-ingress (optional)
+
+```bash
+export KUBECONFIG=$(readlink -f kubeconfig-ionos.yaml)
+
+helm repo add nginx-stable https://helm.nginx.com/stable
+helm repo update
+# Install nginx-ingress
+helm install \
+  nginx-ingress nginx-stable/nginx-ingress \
+  --namespace nginx-ingress \
+  --create-namespace \
+  --version v0.16.2 \
+  --create-namespace
+```
+
+### 3. cert-manager (optional)
 
 ```bash
 export KUBECONFIG=$(readlink -f kubeconfig-ionos.yaml)
@@ -56,7 +72,7 @@ helm install \
 kubectl apply -f helm/cert-manager/cluster-issuer.yaml
 ```
 
-### 3.  Install external-dns (optional)
+### 4.  Install external-dns (optional)
 
 To install the DNS service you must first create secret containing service account credentials for one of the providers ( AWS, GCP, Azure, ... ) and configure it in the values file - ```helm/external-dns/values.yaml```. After that install the service with helm.
 
