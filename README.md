@@ -32,7 +32,7 @@ source .env
 
 To create the necessary infrastructure run the script ```./create-ionos-kubernetes.sh``` in current directory. Terraform will generate the `kubeconfig-ionos.yaml` which contain the KUBECONFIG for the cluster. 
 ```sh
-./create-ionos-kubernetes.sh
+source .env && ./create-ionos-kubernetes.sh
 ```
 
 ### 2. cert-manager (optional)
@@ -68,3 +68,14 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 helm install -n external-dns external-dns bitnami/external-dns -f helm/external-dns/values.yaml --version 6.14.1 --create-namespace
 ```
+
+## Known issues
+
+- Certificates not being issued by cert-manager
+
+This might sometimes happen even if **external-dns** and **cert-manager** are properly configured. Often the issue can be fixed by deleting the cert-manager PODs and letting them restart. If that does not help, try to delete the **cert-manager** and **external-dns** and install them again.
+
+## References
+
+- Documentation for the [IONOS Cloud API](https://api.ionos.com/docs/)    
+- Documentation for the [IONOSCLOUD Terraform provider](https://registry.terraform.io/providers/ionos-cloud/ionoscloud/latest/docs/)  
