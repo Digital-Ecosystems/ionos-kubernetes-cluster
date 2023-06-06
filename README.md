@@ -73,7 +73,9 @@ helm install -n external-dns external-dns bitnami/external-dns -f helm/external-
 
 - Certificates not being issued by cert-manager
 
-This might sometimes happen even if **external-dns** and **cert-manager** are properly configured. Often the issue can be fixed by deleting the cert-manager PODs and letting them restart. If that does not help, try to delete the **cert-manager** and **external-dns** and install them again.
+Often the *cert-manager* can get stuck and doesn't issue certificates. There is a workaround by changing the type of the NGINX-Ingress service from `LoadBalancer` to `ClusterIP` and then back to `LoadBalancer`. This will trigger the *cert-manager* to issue the certificates.
+
+```bash
 
 ## References
 
