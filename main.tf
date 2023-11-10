@@ -40,6 +40,12 @@ variable "cores_count" {
   default = 2
 }
 
+variable "create_private_lan" {
+  description = "Determines whether to create a private LAN for the Kubernetes cluster"
+  type        = bool
+  default     = true
+}
+
 provider "ionoscloud" {
   endpoint = var.ionos_api_url
 }
@@ -53,9 +59,10 @@ resource "ionoscloud_datacenter" "digital_ecosystems" {
 
 ##### Managed IONOS K8S 
 resource "ionoscloud_lan" "lan1" {
-  datacenter_id = ionoscloud_datacenter.digital_ecosystems.id
-  public        = true
-  name          = "k8s-public-lan"
+  count          = var.create_private_lan ? 1 : 0
+  datacenter_id  = ionoscloud_datacenter.digital_ecosystems.id
+  public         = false
+  name           = "k8s-lan"
   lifecycle {
     create_before_destroy = true
   }
@@ -88,6 +95,13 @@ resource "ionoscloud_k8s_node_pool" "pool2" {
   #   min_node_count = 1
   # }
 
+  dynamic "lans" {
+    for_each = var.create_private_lan ? [1] : []
+    content {
+      id   = ionoscloud_lan.lan1[0].id
+      dhcp = true
+    }
+  }
   cpu_family        = "INTEL_SKYLAKE"
   availability_zone = "AUTO"
   storage_type      = "HDD"
