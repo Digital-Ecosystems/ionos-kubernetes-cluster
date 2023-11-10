@@ -54,8 +54,8 @@ resource "ionoscloud_datacenter" "digital_ecosystems" {
 ##### Managed IONOS K8S 
 resource "ionoscloud_lan" "lan1" {
   datacenter_id = ionoscloud_datacenter.digital_ecosystems.id
-  public        = true
-  name          = "k8s-public-lan"
+  public        = false
+  name          = "k8s-lan"
   lifecycle {
     create_before_destroy = true
   }
@@ -87,6 +87,11 @@ resource "ionoscloud_k8s_node_pool" "pool2" {
   #   max_node_count = 2
   #   min_node_count = 1
   # }
+
+  lans {
+    id                  = ionoscloud_lan.lan1.id
+    dhcp                = true
+   }
 
   cpu_family        = "INTEL_SKYLAKE"
   availability_zone = "AUTO"
