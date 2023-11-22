@@ -133,7 +133,7 @@ provider "helm" {
   }
 }
 
-resource "helm_release" "nginx-ingres" {
+resource "helm_release" "nginx-ingress" {
   name       = "nginx-ingress"
 
   repository = "https://helm.nginx.com/stable"
@@ -142,6 +142,8 @@ resource "helm_release" "nginx-ingres" {
   version    = "0.17.1"
 
   create_namespace = true
+  
+  timeout = 600
 
   depends_on = [
     local_sensitive_file.kubeconfig
