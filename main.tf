@@ -71,7 +71,7 @@ resource "ionoscloud_lan" "lan1" {
 
 resource "ionoscloud_k8s_cluster" "kubernetes1" {
   name        = var.kubernetes_cluster_name
-  k8s_version = "1.25.6"
+  k8s_version = "1.28.6"
   maintenance_window {
     day_of_the_week = "Sunday"
     time            = "09:00:00Z"
@@ -133,19 +133,19 @@ provider "helm" {
   }
 }
 
-resource "helm_release" "nginx-ingress" {
-  name       = "nginx-ingress"
-
-  repository = "https://helm.nginx.com/stable"
-  chart      = "nginx-ingress"
-  namespace = "nginx-ingress"
-  version    = "0.17.1"
-
-  create_namespace = true
-  
-  timeout = 600
-
-  depends_on = [
-    local_sensitive_file.kubeconfig
-  ]
-}
+#resource "helm_release" "nginx-ingress" {
+#  name       = "nginx-ingress"
+#
+#  repository = "https://kubernetes.github.io/ingress-nginx"
+#  chart      = "ingress-nginx"
+#  namespace = "nginx-ingress"
+#  version    = "4.7.2"
+#
+#  create_namespace = true
+#
+#  timeout = 600
+#
+#  depends_on = [
+#    local_sensitive_file.kubeconfig
+#  ]
+#}
