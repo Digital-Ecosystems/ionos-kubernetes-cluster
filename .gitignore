@@ -3,3 +3,4 @@ terraform.tfstate**
 kubeconfig-ionos.yaml
 .terraform**
 .env
+.idea
