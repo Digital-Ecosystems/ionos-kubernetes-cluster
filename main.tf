@@ -112,6 +112,35 @@ resource "ionoscloud_k8s_node_pool" "pool2" {
   timeouts {}
 }
 
+resource "ionoscloud_k8s_node_pool" "ingresspool" {
+  datacenter_id  = ionoscloud_datacenter.digital_ecosystems.id
+  k8s_cluster_id = ionoscloud_k8s_cluster.kubernetes1.id
+  name           = "federated-catalog-ingress-pool"
+  k8s_version    = ionoscloud_k8s_cluster.kubernetes1.k8s_version
+  maintenance_window {
+    day_of_the_week = "Sunday"
+    time            = "03:01:04Z"
+  }
+
+  dynamic "lans" {
+    for_each = var.create_private_lan ? [1] : []
+    content {
+      id   = ionoscloud_lan.lan1[0].id
+      dhcp = true
+    }
+  }
+  cpu_family        = "INTEL_SKYLAKE"
+  availability_zone = "AUTO"
+  storage_type      = "HDD"
+  node_count        = 1
+  cores_count       = var.cores_count
+  ram_size          = var.node_memory
+  storage_size      = 20
+  timeouts {}
+  labels            = {
+    nodepool             = "ingress"
+  }
+}
 
 ## configure access to the Container Registry in the K8S cluster
 data "ionoscloud_k8s_cluster" "kubernetes1" {
@@ -132,20 +161,3 @@ provider "helm" {
     config_path    = "kubeconfig-ionos.yaml"
   }
 }
-
-#resource "helm_release" "nginx-ingress" {
-#  name       = "nginx-ingress"
-#
-#  repository = "https://kubernetes.github.io/ingress-nginx"
-#  chart      = "ingress-nginx"
-#  namespace = "nginx-ingress"
-#  version    = "4.7.2"
-#
-#  create_namespace = true
-#
-#  timeout = 600
-#
-#  depends_on = [
-#    local_sensitive_file.kubeconfig
-#  ]
-#}
